@@ -1,8 +1,8 @@
 import random
+
 #genera un unmero aleatorio con la fucnion randit o random 
 def guess_the_number():
     secret_number=random.randint(0,100)
-    print(secret_number)
     player = []
     computer= []
     shift= 'player'
@@ -40,5 +40,6 @@ def guess_the_number():
             else:
                 print("El número secreto es menor.")
             shift = 'player'
+guess_the_number()
 
 ## test con unites
