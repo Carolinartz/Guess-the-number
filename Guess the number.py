@@ -5,10 +5,10 @@ def guess_the_number():
     print(secret_number)
     player = []
     computer= []
-    shift= 'jugadora'
+    shift= 'player'
 ##incrementar un bucle para solicitar adivine el numero la jugadora 
     while True:
-        if shift == 'jugadora':
+        if shift == 'player':
            
 ##obtener el ingereso de la jugadora 
             assumption = int(input("Adivina el número entre 1 y 100: "))
@@ -25,7 +25,7 @@ def guess_the_number():
                 print("El número secreto es mayor.")
             else:
                 print("El número secreto es menor.")
-            turno = 'computer'
+            shift = 'computer'
       
 #el ordenador hace una suposicion aleatoria 
         else:
@@ -39,6 +39,6 @@ def guess_the_number():
                 print("El número secreto es mayor.")
             else:
                 print("El número secreto es menor.")
-            turno = 'jugadora'
+            shift = 'player'
 
 ## test con unites
