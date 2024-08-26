@@ -1,45 +1,49 @@
 import random
 
-#genera un unmero aleatorio con la fucnion randit o random 
 def guess_the_number():
-    secret_number=random.randint(0,100)
-    player = []
-    computer= []
-    shift= 'player'
-##incrementar un bucle para solicitar adivine el numero la jugadora 
-    while True:
-        if shift == 'player':
-           
-##obtener el ingereso de la jugadora 
-            assumption = int(input("Adivina el número entre 1 y 100: "))
-            player.append(assumption)
-##compara lo ingresado por la jugadora con el secreto 
-            if assumption == secret_number:
-##si a es correcto se termina el juego 
-                print(f"¡Felicidades! Has adivinado el número {secret_number} en {len(player)} intentos.")
+    while True:  # Bucle principal para permitir jugar de nuevo
+        secret_number = random.randint(0, 100)
+        player = []
+        computer = []
+        shift = 'player'
+        
+        while True:  # Bucle para el juego en sí
+            if shift == 'player':
+                # Obtener la suposición de la jugadora
+                assumption = int(input("Adivina el número entre 1 y 100: "))
+                player.append(assumption)
+                
+                # Comprobar si la suposición es correcta
+                if assumption == secret_number:
+                    print(f"¡Felicidades! Has adivinado el número {secret_number} en {len(player)} intentos.")
+                    print("Intentos de la jugadora: ", player)
+                    break
+                elif assumption < secret_number:
+                    print("El número secreto es mayor.")
+                else:
+                    print("El número secreto es menor.")
+                shift = 'computer'
+                
+            else:
+                # El ordenador hace una suposición aleatoria
+                assumption = random.randint(0, 100)
+                computer.append(assumption)
+                print(f"El ordenador adivina: {assumption}")
+                
+                if assumption == secret_number:
+                    print(f"El ordenador ha adivinado el número {secret_number} en {len(computer)} intentos.")
+                    break
+                elif assumption < secret_number:
+                    print("El número secreto es mayor.")
+                else:
+                    print("El número secreto es menor.")
+                shift = 'player'
+        
+        # Preguntar si la jugadora quiere jugar de nuevo
+        play_again = input("¿Quieres jugar de nuevo? (sí/no): ").lower()
+        if play_again != 'sí':
+            print("¡Gracias por jugar!")
+            break
 
-##si es falso dar pista de si es mayor o menor
-                print("Intentos de la jugadora: ", player)
-                break
-            elif assumption < secret_number:
-                print("El número secreto es mayor.")
-            else:
-                print("El número secreto es menor.")
-            shift = 'computer'
-      
-#el ordenador hace una suposicion aleatoria 
-        else:
-            assumption=random.randint(0,100)
-            computer.append(assumption)
-            print(f"El ordenador adivina: {assumption}")
-            if assumption == secret_number:
-                print(f"El ordenador ha adivinado el número {secret_number} en {len(computer)} intentos.")
-                break
-            elif assumption < secret_number:
-                print("El número secreto es mayor.")
-            else:
-                print("El número secreto es menor.")
-            shift = 'player'
+# Ejecutar el juego
 guess_the_number()
-
-## test con unites
