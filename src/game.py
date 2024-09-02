@@ -1,12 +1,11 @@
 from .tools import get_random_number, get_validate_number
-from .players import print_information, player_guess, computer_guess
+from .players import player_guess, computer_guess
 
 def play_game():
     """
     Ejecuta la lógica principal del juego.
     """
-    print_information()
-    
+
     ranges = {"min": 1, "max": 100}
     secret_number = get_random_number(ranges)
     player_attempts = []
