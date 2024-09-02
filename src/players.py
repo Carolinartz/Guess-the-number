@@ -19,5 +19,6 @@ def computer_guess(ranges, low, high):
     
     Returns:
         int: El número que el computador adivina.
+    
     """
     return (low + high) // 2

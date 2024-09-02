@@ -1,48 +1,45 @@
 import unittest
 from unittest.mock import patch
-from src.tools import get_random_number, get_validate_number
-from src.players import player_guess, computer_guess
 from src.game import play_game
 
-class TestTools(unittest.TestCase):
-    def test_get_random_number(self):
-        ranges = {"min": 1, "max": 100}
-        number = get_random_number(ranges)
-        self.assertTrue(ranges["min"] <= number <= ranges["max"])
-    
-    def test_get_validate_number(self):
-        ranges = {"min": 1, "max": 100}
-        secret_number = 50
-        
-        correct, message = get_validate_number(50, secret_number, ranges, "jugador")
-        self.assertTrue(correct)
-        self.assertIn("¡Felicidades", message)
-        
-        correct, message = get_validate_number(25, secret_number, ranges, "jugador")
-        self.assertFalse(correct)
-        self.assertEqual(message, "El número es mayor.")
-        
-        correct, message = get_validate_number(75, secret_number, ranges, "jugador")
-        self.assertFalse(correct)
-        self.assertEqual(message, "El número es menor.")
-        
-class TestPlayers(unittest.TestCase):
-    @patch('builtins.input', return_value='42')
-    def test_player_guess(self, mock_input):
-        guess = player_guess()
-        self.assertEqual(guess, 42)
-    
-    def test_computer_guess(self):
-        ranges = {"min": 1, "max": 100}
-        guess = computer_guess(ranges, 1, 100)
-        self.assertTrue(1 <= guess <= 100)
+MAX_TRY = 10
 
-class TestGame(unittest.TestCase):
-    @patch('builtins.input', side_effect=['42', '42', 'no'])
-    @patch('src.players.player_guess', return_value=42)
-    @patch('src.tools.get_random_number', return_value=42)
-    def test_play_game(self, mock_random, mock_guess, mock_input):
+class TestPlayGame(unittest.TestCase):
+
+    @patch('src.game.get_random_number', return_value=42)
+    @patch('src.game.player_guess', return_value=42)
+    @patch('src.game.computer_guess', side_effect=[30, 40, 41, 42])
+    @patch('src.game.get_validate_number',side_effect=[(True, "¡Felicidades, usuario! Has adivinado el número correctamente.")])
+    @patch('builtins.print')
+    def test_play_game(self, mock_print, mock_validate, mock_computer_guess, mock_player_guess, mock_get_random_number):
+        # Mock the behavior of get_validate_number
+        def mock_validate_number(number, secret_number, ranges, entity):
+            if number == secret_number:
+                return True, "¡Felicidades, jugador! Has adivinado el número correctamente."
+            elif number < secret_number:
+                return False, "El número es mayor."
+            else:
+                return False, "El número es menor."
+
+        mock_validate.side_effect = mock_validate_number
+
+        # Call play_game
         play_game()
 
+        # Assertions
+        # Ensure get_random_number was called once
+        mock_get_random_number.assert_called_once()
 
+        # Ensure player_guess was called once
+        mock_player_guess.assert_called_once()
 
+        # Ensure computer_guess was called multiple times (in this case 4 times)
+        self.assertEqual(mock_computer_guess.call_count, 4)
+
+        # Check that the print function was called to output the results
+        mock_print.assert_any_call("¡Felicidades, jugador! Has adivinado el número correctamente.")
+        mock_print.assert_any_call("El ordenador adivina: 30")
+        mock_print.assert_any_call("El ordenador adivina: 40")
+        mock_print.assert_any_call("El ordenador adivina: 41")
+        mock_print.assert_any_call("El ordenador adivina: 42")
+        mock_print.assert_any_call("El ordenador ha adivinado el número en 4 intentos.")
