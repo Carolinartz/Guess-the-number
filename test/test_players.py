@@ -1,28 +1,33 @@
 import unittest
 from unittest.mock import patch
-from src.game import play_game
+from src.players import player_guess, computer_guess
 
-class TestPlayGame(unittest.TestCase):
+class TestGameFunctions(unittest.TestCase):
 
- @patch('src.game.player_guess')
- @patch('src.game.computer_guess')
- @patch('src.game.get_random_number', return_value=50)
- @patch('src.game.get_validate_number', side_effect=[(False, "El número es mayor."),
-                                                    (False, "El número es mayor."),
-                                                    (False, "El número es menor."),
-                                                    (True, "¡Felicidades, jugador!")])
- def test_play_game(self, mock_get_random_number, mock_get_validate_number, mock_computer_guess, mock_player_guess):
-    mock_player_guess.side_effect = [25, 30, 40]  # Adivinanzas del jugador en 3 intentos
-    mock_computer_guess.side_effect = [60]  # Adivinanza del computador
+    @patch('builtins.input', return_value='50')
+    def test_player_guess_valid(self, mock_input):
+        """Prueba que player_guess devuelve el número ingresado por el jugador."""
+        result = player_guess()
+        self.assertEqual(result, 50)
 
-    play_game()
+    @patch('builtins.input', side_effect=['abc', '25'])
+    def test_player_guess_invalid(self, mock_input):
+        """Prueba que player_guess maneja entradas no válidas y solicita un número válido."""
+        with patch('builtins.print') as mock_print:
+            result = player_guess()
+            self.assertEqual(result, 25)
+            # Verifica que se haya llamado a print para la entrada no válida
+            mock_print.assert_called_with("Por favor, ingrese un número válido.")
+    
+    def test_computer_guess(self):
+        """Prueba que computer_guess usa búsqueda binaria para adivinar el número."""
 
-    self.assertEqual(mock_player_guess.call_count, 3)  # Verifica que se llame 3 veces
-    play_game()
+        low = 1
+        high = 100
+        # La suposición debería ser el promedio de low y high
+        result = computer_guess(low, high)
+        expected = (low + high) // 2
+        self.assertEqual(result, expected)
 
-    self.assertEqual(mock_player_guess.call_count, 2)  # Cambia 3 por 2 si solo se llama dos veces
-    mock_player_guess.assert_has_calls([patch.call(), patch.call()])
-    self.assertEqual(mock_computer_guess.call_count, 1)  # Verifica que se llame 1 vez
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
