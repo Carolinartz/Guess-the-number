@@ -1,45 +1,47 @@
 import unittest
 from unittest.mock import patch
-from src.game import play_game
-
-MAX_TRY = 10
+from src.game import play_game, MAX_ATTEMPTS
 
 class TestPlayGame(unittest.TestCase):
 
-    @patch('src.game.get_random_number', return_value=42)
-    @patch('src.game.player_guess', return_value=42)
-    @patch('src.game.computer_guess', side_effect=[30, 40, 41, 42])
-    @patch('src.game.get_validate_number',side_effect=[(True, "¡Felicidades, usuario! Has adivinado el número correctamente.")])
-    @patch('builtins.print')
-    def test_play_game(self, mock_print, mock_validate, mock_computer_guess, mock_player_guess, mock_get_random_number):
-        # Mock the behavior of get_validate_number
-        def mock_validate_number(number, secret_number, ranges, entity):
-            if number == secret_number:
-                return True, "¡Felicidades, jugador! Has adivinado el número correctamente."
-            elif number < secret_number:
-                return False, "El número es mayor."
-            else:
-                return False, "El número es menor."
-
-        mock_validate.side_effect = mock_validate_number
-
-        # Call play_game
+    @patch('src.game.get_random_number', return_value=50)
+    @patch('src.game.print')
+    @patch('src.game.get_validate_number', side_effect=[
+        (False, "El número es mayor."),  # Primer intento del jugador (fallo)
+        (False, "El número es menor."),  # Primer intento de la computadora (fallo)
+        (True, "¡Felicidades, usuario! Has adivinado el número correctamente.")  # Segundo intento del jugador (acierto)
+    ])
+    @patch('src.game.player_guess', side_effect=[60, 50])
+    @patch('src.game.computer_guess', return_value=40)
+    def test_player_wins(self, mock_computer_guess, mock_player_guess, mock_validate, mock_print, mock_random_number):
         play_game()
+        mock_print.assert_any_call("¡Felicidades, usuario! Has adivinado el número correctamente.")
+        mock_print.assert_any_call("Intentos del jugador: [60, 50]")
 
-        # Assertions
-        # Ensure get_random_number was called once
-        mock_get_random_number.assert_called_once()
+    @patch('src.game.get_random_number', return_value=50)
+    @patch('src.game.print')
+    @patch('src.game.get_validate_number', side_effect=[
+        (False, "El número es mayor."),  # Primer intento del jugador (fallo)
+        (False, "El número es menor."),  # Primer intento de la computadora (fallo)
+        (False, "El número es mayor."),  # Segundo intento del jugador (fallo)
+        (True, "El ordenador ha adivinado el número en 2 intentos.")  # Segundo intento de la computadora (acierto)
+    ])
+    @patch('src.game.player_guess', side_effect=[60, 40])
+    @patch('src.game.computer_guess', return_value=50)
+    def test_computer_wins(self, mock_computer_guess, mock_player_guess, mock_validate, mock_print, mock_random_number):
+        play_game()
+        mock_print.assert_any_call("El ordenador ha adivinado el número en 2 intentos.")
 
-        # Ensure player_guess was called once
-        mock_player_guess.assert_called_once()
-
-        # Ensure computer_guess was called multiple times (in this case 4 times)
-        self.assertEqual(mock_computer_guess.call_count, 4)
-
-        # Check that the print function was called to output the results
-        mock_print.assert_any_call("¡Felicidades, jugador! Has adivinado el número correctamente.")
-        mock_print.assert_any_call("El ordenador adivina: 30")
-        mock_print.assert_any_call("El ordenador adivina: 40")
-        mock_print.assert_any_call("El ordenador adivina: 41")
-        mock_print.assert_any_call("El ordenador adivina: 42")
-        mock_print.assert_any_call("El ordenador ha adivinado el número en 4 intentos.")
+    @patch('src.game.get_random_number', return_value=50)
+    @patch('src.game.print')
+    @patch('src.game.get_validate_number', side_effect=[
+        (False, "El número es mayor.") for _ in range(MAX_ATTEMPTS * 2)
+    ])
+    @patch('src.game.player_guess', return_value=60)
+    @patch('src.game.computer_guess', return_value=40)
+    def test_max_attempts_reached(self, mock_computer_guess, mock_player_guess, mock_validate, mock_print, mock_random_number):
+        play_game()
+        mock_print.assert_any_call("Se ha alcanzado el número máximo de intentos permitidos.")
+    
+if __name__ == '__main__':
+    unittest.main()

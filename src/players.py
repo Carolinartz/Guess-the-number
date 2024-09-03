@@ -1,4 +1,3 @@
-
 def player_guess():
     """
     Solicita al jugador ingresar un número y lo retorna.
@@ -6,7 +5,11 @@ def player_guess():
     Returns:
         int: El número ingresado por el jugador.
     """
-    return int(input("Adivina el número entre 1 y 100: "))
+    while True:
+        try:
+            return int(input("Adivina el número entre 1 y 100: "))
+        except ValueError:
+            print("Por favor, ingrese un número válido.")
 
 def computer_guess(ranges, low, high):
     """
@@ -19,6 +22,5 @@ def computer_guess(ranges, low, high):
     
     Returns:
         int: El número que el computador adivina.
-    
     """
     return (low + high) // 2

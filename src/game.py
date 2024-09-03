@@ -1,3 +1,5 @@
+MAX_ATTEMPTS = 20  # Número máximo de intentos permitidos
+
 from .tools import get_random_number, get_validate_number
 from .players import player_guess, computer_guess
 
@@ -13,7 +15,10 @@ def play_game():
     shift = 'player'
     low, high = ranges['min'], ranges['max']
 
-    while True:
+    attempts_counter = 0  # Contador de intentos
+
+    # El bucle se ejecutará mientras el número de intentos sea menor o igual a MAX_ATTEMPTS
+    while attempts_counter < MAX_ATTEMPTS:
         if shift == 'player':
             assumption = player_guess()
             player_attempts.append(assumption)
@@ -37,3 +42,9 @@ def play_game():
             else:
                 high = assumption - 1
             shift = 'player'
+
+        attempts_counter += 1  # Incrementar el contador de intentos
+
+    # Mensaje si se alcanzó el límite de intentos sin adivinar el número
+    if attempts_counter >= MAX_ATTEMPTS:
+        print("Se ha alcanzado el número máximo de intentos permitidos.")
