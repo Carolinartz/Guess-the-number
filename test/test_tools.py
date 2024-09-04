@@ -39,5 +39,4 @@ class TestTools(unittest.TestCase):
         result = get_validate_number(101, 42, ranges, "jugador")
         self.assertEqual(result, (False, "jugador: El número no es válido. Debe estar entre 1 y 100."))
 
-if __name__ == '__main__':
-    unittest.main()
+   

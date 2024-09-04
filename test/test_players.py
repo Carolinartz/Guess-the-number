@@ -37,7 +37,7 @@ class TestPlayerTurn(unittest.TestCase):
         # Configurar los mocks
         player_attempts = []
         ranges = {"min": 1, "max": 100}
-        secret_number = 70  # Número secreto que no es relevante en este caso
+        secret_number = 70  
 
         # Ejecutar la función player_turn
         player_turn(player_attempts, secret_number, ranges)
@@ -47,6 +47,28 @@ class TestPlayerTurn(unittest.TestCase):
 
         # Verificar que player_guess fue llamado
         mock_player_guess.assert_called_once()
+class TestComputerTurn(unittest.TestCase):
+    @patch('src.players.computer_guess', return_value=50)  # Mock para computer_guess
+    @patch('src.players.get_validate_number')
+    def test_computer_turn_correct_guess(self, mock_get_validate_number, mock_computer_guess):
+        # Configurar el mock
+        mock_get_validate_number.return_value = (True, "¡Felicidades, computador! Has adivinado el número correctamente.")
         
-if __name__ == '__main__':
-    unittest.main()
+        computer_attempts = []
+        ranges = {"min": 1, "max": 100}
+        secret_number = 50
+        low = 1
+        high = 100
+        
+        # Ejecutar la función computer_turn
+        result = computer_turn(computer_attempts, secret_number, ranges, low, high)
+        
+        # Verificar el resultado
+        self.assertTrue(result[0], "El computador debería adivinar correctamente.")
+        self.assertEqual(result[1], low, "El límite inferior debería permanecer igual.")
+        self.assertEqual(result[2], high, "El límite superior debería permanecer igual.")
+        
+        mock_computer_guess.assert_called_once_with(low, high)
+        mock_get_validate_number.assert_called_once_with(50, secret_number, ranges, "computador")
+
+

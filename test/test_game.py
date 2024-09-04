@@ -1,5 +1,6 @@
 import unittest
-from src.game import initialize_game
+from src.game import initialize_game, print_results, play_game
+from unittest.mock import patch
 
 class TestGameFunctions(unittest.TestCase):
     
@@ -30,5 +31,32 @@ class TestGameFunctions(unittest.TestCase):
         self.assertEqual(result[4], low, "El límite inferior no es el esperado.")
         self.assertEqual(result[5], high, "El límite superior no es el esperado.")
 
-if __name__ == '__main__':
-    unittest.main()
+class TestPrintResults(unittest.TestCase):
+
+    @patch('src.game.MAX_ATTEMPTS', 10)
+    def test_max_attempts_reached(self):
+        # Configuramos los valores de prueba para simular que se alcanzaron el máximo de intentos
+        attempts_counter = 10
+        player_attempts = [3, 5, 8, 9]
+        computer_attempts = [1, 2, 4, 6]
+
+        # Mockeamos la función print para capturar la salida
+        with patch('builtins.print') as mock_print:
+            print_results(attempts_counter, player_attempts, computer_attempts)
+
+            # Verificamos que se imprime el mensaje de número máximo de intentos alcanzado
+            mock_print.assert_called_once_with("Se ha alcanzado el número máximo de intentos permitidos.")
+
+    @patch('src.game.MAX_ATTEMPTS', 10)
+    def test_player_wins(self):
+        # Configuramos los valores de prueba para simular que el jugador adivinó el número correcto
+        attempts_counter = 9
+        player_attempts = [10, 20, 30, 40, 50]
+        computer_attempts = []
+
+        # Mockeamos la función print para capturar la salida
+        with patch('builtins.print') as mock_print:
+            print_results(attempts_counter, player_attempts, computer_attempts)
+
+            # Verificamos que se imprime la lista de intentos del jugador
+            mock_print.assert_called_once_with(f"Intentos del jugador: {player_attempts}")

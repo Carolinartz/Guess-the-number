@@ -14,6 +14,7 @@ def get_random_number(ranges):
     min_range = ranges["min"]
     max_range = ranges["max"]
     number_random = random.randint(min_range, max_range)
+    print(number_random)
     return number_random
 
 

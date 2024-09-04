@@ -1,4 +1,4 @@
-MAX_ATTEMPTS = 7 # Número máximo de intentos permitidos
+MAX_ATTEMPTS = 10 # Número máximo de intentos permitidos
 
 from src.tools import get_random_number
 from src.players import player_turn, computer_turn
