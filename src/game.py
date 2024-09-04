@@ -1,9 +1,9 @@
-MAX_ATTEMPTS = 20  # Número máximo de intentos permitidos
+MAX_ATTEMPTS = 7 # Número máximo de intentos permitidos
 
-from src.tools import get_random_number, get_validate_number
+from src.tools import get_random_number
 from src.players import player_turn, computer_turn
 
-def initialize_game(ranges):
+def initialize_game(ranges): #teste que genere que el 1 al 100 en random
     """
     Inicializa los valores iniciales del juego.
     """
