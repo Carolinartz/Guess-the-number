@@ -58,7 +58,7 @@ def computer_turn(computer_attempts, secret_number, ranges, low, high):
         tuple: (bool, int, int) - Si el computador adivinó correctamente, nuevo límite inferior, nuevo límite superior.
     """
     assumption = computer_guess(low, high)
-    print("verificandooooo missing")
+    
     computer_attempts.append(assumption)
     print(f"El ordenador adivina: {assumption}")
     correct, message = get_validate_number(assumption, secret_number, ranges, "computador")
