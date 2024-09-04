@@ -38,7 +38,9 @@ def player_turn(player_attempts, secret_number, ranges):
     assumption = player_guess()
     player_attempts.append(assumption)
     correct, message = get_validate_number(assumption, secret_number, ranges, "jugador")
+
     print(message)
+    
     return correct
 
 def computer_turn(computer_attempts, secret_number, ranges, low, high):
