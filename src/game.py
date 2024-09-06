@@ -7,6 +7,8 @@ def initialize_game(ranges): #teste que genere que el 1 al 100 en random
     """
     Inicializa los valores iniciales del juego.
     """
+
+
     secret_number = get_random_number(ranges)
     player_attempts = []
     computer_attempts = []
@@ -19,7 +21,7 @@ def print_results(attempts_counter, player_attempts, computer_attempts):
     Imprime los resultados del juego.
     """
     if attempts_counter < MAX_ATTEMPTS:
-        print(f"Intentos del jugador: {player_attempts}" if len(player_attempts) > 0 else f"El ordenador ha adivinado el número en {len(computer_attempts)} intentos.")
+        print(f"Intentos del jugador: {player_attempts} Intentos del ordenador : {computer_attempts}" if len(player_attempts) > 0 else f"El ordenador ha adivinado el número en {len(computer_attempts)} intentos.")
     else:
         print("Se ha alcanzado el número máximo de intentos permitidos.")
 

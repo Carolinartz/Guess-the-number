@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, call
+from unittest.mock import patch
 
 from src.players import player_guess, computer_guess, player_turn, computer_turn
 from src.tools import get_validate_number
